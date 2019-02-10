@@ -1,0 +1,99 @@
+---
+title: |
+  BST5420 Sampling Theory and Survey Design
+  Homework 1
+author: Miao Cai^[PhD student, Department of Epidemiology and Biostatistics, College for Public Health and Social Justice, Saint Louis University. Email address [miao.cai@slu.edu](miao.cai@slu.edu)]
+date: '`r Sys.Date()`'
+output: pdf_document
+link-citations: true
+linkcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\fbox{\begin{minipage}{\linewidth}
+1. (2 Points) Suppose that a population consists of 50 individuals, numbered 1 through 50. The following three samples represent (a) a simple random sample, (b) a stratified random sample, and (c) a cluster sample (but not necessarily in that order). Note that each is a sample of size 15.
+
+\begin{enumerate}
+  \item Sample 1 = { 6, 7, 8, 9, 10, 31, 32, 33, 34, 35, 41, 42, 43, 44, 45 }
+  \item Sample 2 = { 3, 4, 9, 11, 17, 19, 23, 25, 26, 31, 33, 38, 44, 45, 50 }
+  \item Sample 3 = { 1, 3, 8, 9, 10, 18, 23, 26, 27, 29, 31, 32, 34, 38, 48 }
+\end{enumerate}
+
+Which is which? (Hint: Find the ones that could be stratified and cluster samples, and the one left over is the SRS.
+\end{minipage}}
+
+**Answers:**
+
+- Sample 1 seems to be cluster samples since there are three clusters in the sample: {6, 7, 8, 9, 10}, {31, 32, 33, 34, 35}, {41, 42, 43, 44, 45}.
+- Sample 2 seems to be stratified samples since there are samples from all 5 stratas: { 3, 4, 9 } from strata 0 - 10, { 11, 17, 19 } from strata 11 - 20, { 23, 25, 26 } from strata 21 - 30, { 31, 33, 38 } from strata 31 - 40, { 44, 45, 50 } from strata 41 - 50. 
+- Sample 3 is more like simple random sample since I don't see any significant pattern in the sample.
+
+\fbox{\begin{minipage}{\linewidth}
+2. (2 Points) Do problem 10 of Chapter 2. “Which of the following SRS designs will give the most precision …”
+
+Which of the following SRS designs will give the most precision for estimating a population mean? Assume that each population has the same value of the population variance $S^2$.
+
+\begin{enumerate}
+  \item An SRS of size 400 from a population of size 4000
+  \item An SRS of size 30 from a population of size 300
+  \item An SRS of size 3000 from a population of size 300,000,000
+\end{enumerate}
+\end{minipage}}
+
+**Answers:**
+
+Since the population variance $S^2$ is assumed to be the same, the standard error of population mean is $\sigma/\sqrt{n}$, which sololy depends on sample size. Therefore, an SRS of size 3000 from a population of size 300,000,000 would have the highest precision for estimating a population mean.
+
+\fbox{\begin{minipage}{\linewidth}
+3. (6 Points) Do problem 33 in Chapter 2 of the textbook. “Online bookstore. The website amazon.com can be used to obtain populations of books, CDs, and other wares.” Use a sample size of 10, rather than the 50 that the problem asks for in part c. Be creative in your choice of genre, but don’t be too general.
+
+
+
+\begin{enumerate}
+  \item Do part (a). In the books search window, type in a genre you like, such as mystery or sports; you may want to narrow your search by selecting a subcategory since an upper bound is placed on the number of books that can be displayed. Choose a genre with at least 20 pages of listings. The list of books forms your population.
+  \item Do part (b). What is your target population? What is the population size, N?
+  \item Do part (c) but don’t worry about the amount of time you spent collecting data. Take an SRS of 10 books from your population. Describe how you selected the SRS, and record the amount of time you spent taking the sample and collecting the data.
+  \item Record just the price. Record the following information for each book in your SRS: price
+  \item Do part (e). Give a point estimate and a 95% CI for the mean price of books in the genre you selected.
+  \item Skip part (f)
+  \item Do part (g). Explain, to a person who knows no statistics, what your estimates and CIs mean.
+\end{enumerate}
+\end{minipage}}
+
+**Answers:**
+
+1. I choose the key words "Bayesian data statistics"^[[https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Dstripbooks&field-keywords=bayesian+data+analysis&rh=n%3A283155%2Ck%3Abayesian+data+analysis](https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Dstripbooks&field-keywords=bayesian+data+analysis&rh=n%3A283155%2Ck%3Abayesian+data+analysis)]
+2. The target population is all the book results returned by Amazon. The population size is 506.
+3. I randomly scrolled to a page and randomly pick a book on that page. I repeated this procedure for 10 times and I get a SRS sample of 10 books. 
+```{r echo = FALSE}
+dat = data.frame(
+  book_name = c(
+    "Bayesian Methods for Data Analysis", 
+    "Bayesian Statistics: An Introduction, 4th Edition: An Introduction, 4th Edition",
+    "Bayesian Analysis of Gene Expression Data (Statistics in Practice)", 
+    "Machine Learning for Decision Makers: Cognitive Computing Fundamentals for Better Decision Making",
+    "Interval-Censored Time-to-Event Data: Methods and Applications (Chapman & Hall/CRC Biostatistics Series)",
+    "Analysis of Metal-loss Corrosion on Energy Pipelines Based on ILI Data: A Bayesian Approach",
+    "Advanced Techniques in Knowledge Discovery and Data Mining (Advanced Information and Knowledge Processing)",
+    "Multiscale Modeling: A Bayesian Perspective (Springer Series in Statistics)",
+    "Dynamical Search: Applications of Dynamical Systems in Search and Optimization (Chapman & Hall/CRC Interdisciplinary Statistics)",
+    "Credit Risk Analytics: Measurement Techniques, Applications, and Examples in SAS (Wiley and SAS Business Series)"),
+  price = c(80.28, 52.11, 77.13, 29.99, 77.99, 84, 68.5, 44.99, 68.23, 23.14)
+)
+```
+The book names are: `r knitr::kable(dat[,1])`
+4. The price of the 10 SRS books are: `r dat$price`. The sample mean is `r round(mean(dat$price), 2)`, while sample standard deviation is `r round(sd(dat$price), 2)`.
+5. The formula to estimate confidence interval for the population mean is $\bar{x} \pm t*\frac{s}{\sqrt{n}}$. The degrees of freedom is $n - 1 = 9$, so the t statistic is `r round(qt(0.975, 9), 2)`. The confidence interval can be calculated as follows in R:
+```{r}
+n = 10
+t = qt(0.975, n - 1)
+s = sd(dat$price)
+xbar = mean(dat$price)
+round(xbar - t*s/sqrt(n), 2)
+round(xbar + t*s/sqrt(n), 2)
+```
+6. The mean price of book with keywords "Bayesian data analysis" on Amazon is about 60.636 US dollars. If we take samples for a lot of times, 95% these estimated mean price will fall between `r round(xbar - t*s/sqrt(n), 2)` and `r round(xbar + t*s/sqrt(n), 2)`.
+
