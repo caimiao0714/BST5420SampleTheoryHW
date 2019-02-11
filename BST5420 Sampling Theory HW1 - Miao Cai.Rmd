@@ -45,7 +45,17 @@ Which of the following SRS designs will give the most precision for estimating a
 
 **Answers:**
 
-Since the population variance $S^2$ is assumed to be the same, the standard error of population mean is $\sigma/\sqrt{n}$, which sololy depends on sample size. Therefore, an SRS of size 3000 from a population of size 300,000,000 would have the highest precision for estimating a population mean.
+The variance of sample mean estimate is $\frac{s^2}{n}\frac{N-n}{N} = s^2(\frac{1}{n}-\frac{1}{N})$. Therefore, below are the variances of each of the samples:
+
+- $\frac{s^2}{n}(1-\frac{n}{N}) = s^2(\frac{1}{400} - \frac{1}{4000})=\frac{9}{4000}s^2$
+- $\frac{s^2}{n}(1-\frac{n}{N}) = s^2(\frac{1}{30} - \frac{1}{4000})=\frac{9}{300}s^2$
+- $\frac{s^2}{n}(1-\frac{n}{N}) = s^2(\frac{1}{3000} - \frac{1}{300000000})$
+
+```{r}
+variance = c(9/4000, 9/300, (1/3000 - 1/300000000))
+which(variance == min(variance))
+```
+Therefore, the last sample "An SRS of size 3000 from a population of size 300,000,000" has the most precise estimate of the population mean.
 
 \fbox{\begin{minipage}{\linewidth}
 3. (6 Points) Do problem 33 in Chapter 2 of the textbook. “Online bookstore. The website amazon.com can be used to obtain populations of books, CDs, and other wares.” Use a sample size of 10, rather than the 50 that the problem asks for in part c. Be creative in your choice of genre, but don’t be too general.
