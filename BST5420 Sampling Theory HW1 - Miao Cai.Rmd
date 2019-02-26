@@ -77,7 +77,7 @@ Therefore, the last sample "An SRS of size 3000 from a population of size 300,00
 
 1. I choose the key words "Bayesian data statistics"^[[https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Dstripbooks&field-keywords=bayesian+data+analysis&rh=n%3A283155%2Ck%3Abayesian+data+analysis](https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Dstripbooks&field-keywords=bayesian+data+analysis&rh=n%3A283155%2Ck%3Abayesian+data+analysis)]
 2. The target population is all the book results returned by Amazon. The population size is 506.
-3. I randomly scrolled to a page and randomly pick a book on that page. I repeated this procedure for 10 times and I get a SRS sample of 10 books. 
+3. I used a random number generated in R to get 10 unrepeated samples from a population `1:506`, and I get the information of the 10 books from Amazon.
 ```{r echo = FALSE}
 dat = data.frame(
   book_name = c(
@@ -96,14 +96,15 @@ dat = data.frame(
 ```
 The book names are: `r knitr::kable(dat[,1])`
 4. The price of the 10 SRS books are: `r dat$price`. The sample mean is `r round(mean(dat$price), 2)`, while sample standard deviation is `r round(sd(dat$price), 2)`.
-5. The formula to estimate confidence interval for the population mean is $\bar{x} \pm t*\frac{s}{\sqrt{n}}$. The degrees of freedom is $n - 1 = 9$, so the t statistic is `r round(qt(0.975, 9), 2)`. The confidence interval can be calculated as follows in R:
+5. The formula to estimate confidence interval for the population mean is $\bar{x} \pm t*\sqrt{\frac{s^2}{n}\frac{N-n}{N}}$. The degrees of freedom is $n - 1 = 9$, so the t statistic is `r round(qt(0.975, 9), 2)`. The confidence interval can be calculated as follows in R:
 ```{r}
+N = 506
 n = 10
 t = qt(0.975, n - 1)
 s = sd(dat$price)
 xbar = mean(dat$price)
-round(xbar - t*s/sqrt(n), 2)
-round(xbar + t*s/sqrt(n), 2)
+(cl_left = round(xbar - t*sqrt(s^2/n*(N-n)/N), 2))
+(cl_right = round(xbar + t*sqrt(s^2/n*(N-n)/N), 2))
 ```
-6. The mean price of book with keywords "Bayesian data analysis" on Amazon is about 60.636 US dollars. If we take samples for a lot of times, 95% these estimated mean price will fall between `r round(xbar - t*s/sqrt(n), 2)` and `r round(xbar + t*s/sqrt(n), 2)`.
+6. The mean price of book with keywords "Bayesian data analysis" on Amazon is about 60.636 US dollars. If we take samples for a lot of times,  95% times the confidence intervals will capture the population mean.
 
