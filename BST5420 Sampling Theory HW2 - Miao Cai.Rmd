@@ -10,10 +10,11 @@ linkcolor: blue
 header-includes:
   - \usepackage[bottom]{footmisc}
   - \usepackage{booktabs}
+  - \usepackage{float}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.align='center', fig.width=6, fig.asp=0.618,fig.pos = 'h')
+knitr::opts_chunk$set(echo = TRUE, fig.align='center', fig.width=6, fig.asp=0.618,fig.pos = 'H')
 ```
 
 Note that the points total 30, but the assignment is worth 10 points. Your homework score will be recorded as your score out of 30, divided by 3.
@@ -64,6 +65,9 @@ Foresters want to estimate the average age of trees in a stand. Determining age 
 
 1. R code: 
 ```{r fig.cap='Scatterplot of age over diameter in the 20 sample trees'}
+pacman::p_load(tidyverse)
+options(digits = 3, scipen = 999)
+
 Diameter = c(
   12, 11.4, 7.9, 9, 10.5, 7.9, 7.3, 10.2, 11.7, 11.3,
   5.7, 8.0, 10.3, 12, 9.2, 8.5, 7, 10.7, 9.3, 8.2)
@@ -71,7 +75,6 @@ Age = c(125, 119, 83, 85, 99, 117, 69, 133, 154, 168,
         61, 80, 114, 147, 122, 106, 82, 88, 97, 99)
 
 dat = data.frame(Diameter, Age)
-pacman::p_load(tidyverse)
 
 ggplot(dat, aes(Diameter, Age)) + 
   geom_point() + theme_bw()
@@ -172,27 +175,95 @@ sum_tab = dat3 %>%
   group_by(city) %>% 
   summarise(m_i = n(),
             Mean = mean(CaseNumber),
-            Std_dev = sd(CaseNumber)) 
+            Std_dev = sd(CaseNumber),
+            Sum = sum(CaseNumber)) 
+```
 
+\newpage
+
+```{r}
 knitr::kable(
   sum_tab, 
   caption = 'Summary statistics for each cluster',
   digits = 2)
 ```
 
+
 Boxplots for each cluster:
 
-```{r fig.cap='Boxplots of the total number of candy Green Globules sold in each sample city'}
+```{r fig.cap='Boxplots of the total number of candy Green Globules sold in each sample city',fig.pos='H'}
 ggplot(dat3, aes(x = city, y = CaseNumber)) + 
   geom_boxplot(color = "#1F3552", size = 0.9) +  theme_bw() + 
   ylab("Total number of candy Green Globules sold")
 ```
 
+In this case, the total number of elements $M_i$ in the population is unknown. The $M$ can be estimated using the following formula:
+
+$$\hat{M} = \frac{N}{n}\sum_{i\in S}M_i$$
+
+Then $\hat{\tau}$ and $\hat{\mu}$ can be estimated using the following formulas and R code:
+
+\begin{align*}
+\hat{\tau} &= \frac{N}{n}\sum_{i \in S}M_i\bar{y_i}\\
+\hat{\mu} &= \frac{\hat{\tau}}{M} = \frac{\hat{\tau}}{M}\frac{N}{n}\sum_{i \in S}M_i\bar{y_i}
+\end{align*}
+
 ```{r}
 M_i = c(52, 19, 37, 39, 8, 14)
+m_i = sum_tab$m_i
 M = sum(M_i)
 N = 45
 n = nrow(sum_tab)
-mu_hat = N/n*sum(M_i*sum_tab$Mean)/M
+
+M_hat = N/n*sum(M_i)
+y_bar = sum_tab$Mean
+tau_hat = N/n*sum(M_i*y_bar)
+mu_hat = N/n*sum(M_i*y_bar)/M_hat
 ```
 
+The estimated values are: 
+
+- $\hat{\tau} = `r tau_hat`$ 
+- $\hat{\mu} = `r mu_hat`$
+
+To estimate the standard errors of the two estimates, we need to calculate three intermediate variables:
+
+\begin{align*}
+\hat{\tau_i} & = \frac{M_i}{m_i}\sum_{j \in S_i}y_{ij}\\
+s_{t}^2 & = \frac{1}{n-1}\sum_{i \in S}(\hat{\tau_i}-\frac{\hat{\tau}}{N})^2\\
+s_i^2 & = \frac{1}{m_i-1}\sum_{j \in S_i}(y_{ij}-\bar{y}_i)^2
+\end{align*}
+
+Then, $\widehat{V(\hat{\tau})}$ and $\widehat{V(\hat{\mu})}$ can be estimated using the following formula:
+
+\begin{align*}
+\widehat{V(\hat{\tau})} & = N^2(1 - \frac{n}{N})\frac{S_t^2}{n} +  \frac{N}{N}\sum_{i \in S}(1 - \frac{m_i}{M_i}M_i^2\frac{s_i^2}{m_i})\\
+\widehat{V(\hat{\mu})} & = \frac{N^2}{M^2}(1 - \frac{n}{N})\frac{s_r^2}{n} + \frac{N}{M^2n}\sum_{i \in S}(1 - \frac{m_i}{M_i})M_i^2\frac{s_i^2}{m_i}
+\end{align*}
+
+```{r}
+tau_i = M_i/m_i*sum_tab$Sum
+s_t_square = 1/(n - 1)*sum(tau_i - tau_hat/n)^2
+
+sum_square = sum_tab %>% 
+  select(city, Mean) %>% 
+  right_join(dat3) %>% 
+  mutate(diff_square = (CaseNumber - Mean)^2) %>% 
+  group_by(city) %>% 
+  summarise(sum_square = sum(diff_square)) %>% 
+  pull(sum_square)
+s_i_square = 1/(m_i - 1)*sum_square
+V_tau = N^2*(1 - n/N)*s_t_square/n + N/n*sum((1 - m_i/M_i)*M_i^2*s_i_square/m_i)
+sd_tau = sqrt(V_tau)
+
+# V_mu
+s_r_square = sum((M_i*y_bar - M_i*mu_hat)^2)
+V_mu = N^2/M^2*(1 - n/N)*s_r_square/n + 
+  N/(M^2*n)*sum((1 - m_i/M_i)*M_i^2*s_i_square/m_i)
+sd_mu = sqrt(V_mu)
+```
+
+The estimates of the standard errors are:
+
+- $\widehat{V(\hat{\tau})} = `r V_tau`$, $\widehat{sd(\hat{\tau})} = `r sd_tau`$,
+- $\widehat{V(\hat{\mu})} = `r V_mu`$, $\widehat{sd(\hat{\mu})} = `r sd_mu`$.
