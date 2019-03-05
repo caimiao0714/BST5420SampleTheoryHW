@@ -96,22 +96,23 @@ The standard error of the ratio estimate can be calculated using the following f
 \begin{align*}
 e_i & = y_i - \hat{B}x_i \\
 s_e^2 & = \frac{1}{n-1}\sum_{i \in S}e_i^2\\
-\widehat{V(\hat{B})} & = (1 - \frac{n}{N})\frac{S_e^2}{n\bar{x}^2}
+\widehat{V(\hat{\tau})} & = (1 - \frac{n}{N})*\tau_x^2\frac{S_e^2}{n\bar{x}^2}
 \end{align*}
 
 R code:
 ```{r}
 N = 1132
 n = length(Age)
+tau_x = 10.3
+
 Bhat = mean(Age)/mean(Diameter)
 residual = Age - Bhat*Diameter
 SSE = sum(residual^2)/(n-1)
-VhatB = (1-n/N)*SSE/(n*mean(Diameter)^2)
+VhatB = (1-n/N)*SSE*tau_x^2/(n*mean(Diameter)^2)
 standard_error = sqrt(VhatB)
-
-print(standard_error)
 ```
 
+The standard error of the mean age $\widehat{sd(\hat{\tau})}$ is: `r standard_error`
 
 
 
@@ -157,6 +158,8 @@ errors of your estimates.
 1. Summary statistics for each cluster:
 
 ```{r}
+pacman::p_load(tidyverse)
+
 city = c(rep(1, 10), rep(2, 4), rep(3, 7), 
          rep(4, 8), rep(5, 2), rep(6, 3))
 CaseNumber = c(
@@ -173,17 +176,18 @@ dat3$city = as.character(dat3$city)
 
 sum_tab = dat3 %>% 
   group_by(city) %>% 
-  summarise(m_i = n(),
-            Mean = mean(CaseNumber),
-            Std_dev = sd(CaseNumber),
-            Sum = sum(CaseNumber)) 
+  summarise(
+    m_i = n(),
+    Mean = mean(CaseNumber),
+    Std_dev = sd(CaseNumber),
+    Sum = sum(CaseNumber)) 
 ```
 
 \newpage
 
 ```{r}
 knitr::kable(
-  sum_tab, 
+  sum_tab, align = 'c',
   caption = 'Summary statistics for each cluster',
   digits = 2)
 ```
@@ -198,11 +202,9 @@ ggplot(dat3, aes(x = city, y = CaseNumber)) +
 ```
 
 In this case, the total number of elements $M_i$ in the population is unknown. The $M$ can be estimated using the following formula:
-
 $$\hat{M} = \frac{N}{n}\sum_{i\in S}M_i$$
 
 Then $\hat{\tau}$ and $\hat{\mu}$ can be estimated using the following formulas and R code:
-
 \begin{align*}
 \hat{\tau} &= \frac{N}{n}\sum_{i \in S}M_i\bar{y_i}\\
 \hat{\mu} &= \frac{\hat{\tau}}{M} = \frac{\hat{\tau}}{M}\frac{N}{n}\sum_{i \in S}M_i\bar{y_i}
@@ -211,7 +213,6 @@ Then $\hat{\tau}$ and $\hat{\mu}$ can be estimated using the following formulas 
 ```{r}
 M_i = c(52, 19, 37, 39, 8, 14)
 m_i = sum_tab$m_i
-M = sum(M_i)
 N = 45
 n = nrow(sum_tab)
 
@@ -227,7 +228,6 @@ The estimated values are:
 - $\hat{\mu} = `r mu_hat`$
 
 To estimate the standard errors of the two estimates, we need to calculate three intermediate variables:
-
 \begin{align*}
 \hat{\tau_i} & = \frac{M_i}{m_i}\sum_{j \in S_i}y_{ij}\\
 s_{t}^2 & = \frac{1}{n-1}\sum_{i \in S}(\hat{\tau_i}-\frac{\hat{\tau}}{N})^2\\
@@ -235,7 +235,6 @@ s_i^2 & = \frac{1}{m_i-1}\sum_{j \in S_i}(y_{ij}-\bar{y}_i)^2
 \end{align*}
 
 Then, $\widehat{V(\hat{\tau})}$ and $\widehat{V(\hat{\mu})}$ can be estimated using the following formula:
-
 \begin{align*}
 \widehat{V(\hat{\tau})} & = N^2(1 - \frac{n}{N})\frac{S_t^2}{n} +  \frac{N}{N}\sum_{i \in S}(1 - \frac{m_i}{M_i}M_i^2\frac{s_i^2}{m_i})\\
 \widehat{V(\hat{\mu})} & = \frac{N^2}{M^2}(1 - \frac{n}{N})\frac{s_r^2}{n} + \frac{N}{M^2n}\sum_{i \in S}(1 - \frac{m_i}{M_i})M_i^2\frac{s_i^2}{m_i}
@@ -243,7 +242,7 @@ Then, $\widehat{V(\hat{\tau})}$ and $\widehat{V(\hat{\mu})}$ can be estimated us
 
 ```{r}
 tau_i = M_i/m_i*sum_tab$Sum
-s_t_square = 1/(n - 1)*sum(tau_i - tau_hat/n)^2
+s_t_square = 1/(n - 1)*sum((tau_i - tau_hat/N)^2)
 
 sum_square = sum_tab %>% 
   select(city, Mean) %>% 
@@ -258,8 +257,8 @@ sd_tau = sqrt(V_tau)
 
 # V_mu
 s_r_square = sum((M_i*y_bar - M_i*mu_hat)^2)
-V_mu = N^2/M^2*(1 - n/N)*s_r_square/n + 
-  N/(M^2*n)*sum((1 - m_i/M_i)*M_i^2*s_i_square/m_i)
+V_mu = N^2/M_hat^2*(1 - n/N)*s_r_square/n + 
+  N/(M_hat^2*n)*sum((1 - m_i/M_i)*M_i^2*s_i_square/m_i)
 sd_mu = sqrt(V_mu)
 ```
 
