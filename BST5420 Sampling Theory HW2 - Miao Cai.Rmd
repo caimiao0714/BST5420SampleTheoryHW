@@ -96,23 +96,26 @@ The standard error of the ratio estimate can be calculated using the following f
 \begin{align*}
 e_i & = y_i - \hat{B}x_i \\
 s_e^2 & = \frac{1}{n-1}\sum_{i \in S}e_i^2\\
-\widehat{V(\hat{\tau})} & = (1 - \frac{n}{N})*\tau_x^2\frac{S_e^2}{n\bar{x}^2}
+\widehat{V(\hat{\mu_x})} & = \widehat{V(\hat{\tau_x}/n)}\\
+& = \frac{1}{n^2}\widehat{V(\hat{\tau_x})}\\
+& = \frac{1}{n^2}(1 - \frac{n}{N})*\tau_x^2\frac{S_e^2}{n\bar{x}^2}\\
+& = (1 - \frac{n}{N})*\mu_x^2\frac{S_e^2}{n\bar{x}^2}
 \end{align*}
 
 R code:
 ```{r}
 N = 1132
 n = length(Age)
-tau_x = 10.3
+mu_x = 10.3
 
 Bhat = mean(Age)/mean(Diameter)
 residual = Age - Bhat*Diameter
 SSE = sum(residual^2)/(n-1)
-VhatB = (1-n/N)*SSE*tau_x^2/(n*mean(Diameter)^2)
-standard_error = sqrt(VhatB)
+Vhat_mu_y = (1-n/N)*SSE*mu_x^2/(n*mean(Diameter)^2)
+standard_error = sqrt(Vhat_mu_y)
 ```
 
-The standard error of the mean age $\widehat{sd(\hat{\tau})}$ is: `r standard_error`
+The standard error of the mean age $\widehat{sd(\hat{\mu_x})}$ is: `r standard_error`
 
 
 

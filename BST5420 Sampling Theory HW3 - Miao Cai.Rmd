@@ -1,0 +1,91 @@
+---
+title: |
+  BST5420 Sampling Theory and Survey Design
+  Homework 3
+author: Miao Cai^[PhD student, Department of Epidemiology and Biostatistics, College for Public Health and Social Justice, Saint Louis University. Email address [miao.cai@slu.edu](miao.cai@slu.edu)]
+date: '`r Sys.Date()`'
+output: pdf_document
+link-citations: true
+linkcolor: blue
+header-includes:
+  - \usepackage[bottom]{footmisc}
+  - \usepackage{booktabs}
+  - \usepackage{float}
+  - \usepackage{csquotes}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align='center', fig.width=6, fig.asp=0.618,fig.pos = 'H')
+```
+
+**Due April 2, 2019**
+
+This is worth 51 points, and the recorded score will be the proportion correct times 10 (rounded to the nearest half point) in order to be on a 10 point scale.
+
+\fbox{\begin{minipage}{\linewidth}
+\textbf{1. (12 Points)} A researcher developed a test designed to measure the degree of awareness of current public health events. She wants to estimate the average score that would be achieved on this test by all students in a certain high school. The administration at the school will not allow the experimenter to randomly select students from classes in session, but it will allow her to interrupt a small number of classes for the purpose of giving the test to every member of the class. Thus, the experimenter selects 25 classes at random from the 108 classes in session at a particular hour. The test is given to each member of the sampled classes, with results as shown in the table below. Estimate the mean score that would be achieved on the test by all students in the school. Also, give an approximate 95% confidence interval for the mean.
+\end{minipage}}
+
+
+
+
+\newpage
+
+
+\fbox{\begin{minipage}{\linewidth}
+\textbf{2. (21 Points)} Read the paper: \textit{Thorpe, Lorna E., et al. "Childhood obesity in New York City elementary school students." American Journal of Public Health 94.9 (2004): 1496-1500.} This can be obtained by searching “thorpe childhood obesity new york” at scholar.google.com.\\
+
+The authors say “This height-and-weight survey was conducted with a stratified, multistage, probability sample of elementary public school children in New York City.”\\
+
+\begin{enumerate}
+\item Describe what "stratification" means in this context. What are the strata?
+\item Describe what multistage means in this context. Within each stratum, what is the design of the sampling plan?
+\item Describe the levels of the sampling design from part (b). (For example, "four-stage cluster sample where a sample of BLANK psus is selected from BLANK; then from each BLANK a sample of BLANK from ...")
+\item Describe what probability sample means in this context.
+\item Describe one of the response variables in this study.
+\item What is the population in this study?
+\item Describe one parameter that is estimated (e.g., mean, total, proportion). Give its point estimate and margin of error.
+\end{enumerate}
+
+\end{minipage}}
+
+
+
+\newpage
+
+
+
+
+
+
+\fbox{\begin{minipage}{\linewidth}
+\textbf{3. (12 Points)} Determine the sampling weights for the following sampling plans.
+
+\begin{enumerate}
+\item A simple random sample of size n from a population of size $N$.
+\item A stratified random sample where for stratum $h (h = 1, 2, \dots, H)$ , $n_h$ units are selected from the $N_h$ items in.
+\item A one-stage cluster sample with notation given on p. 169, where each cluster is selected with equal probability.
+\item A one-stage cluster sample where the probability of selecting a cluster is proportional to the cluster size, and clusters are selected with replacement.
+\end{enumerate}
+
+\end{minipage}}
+
+
+
+
+\newpage
+
+
+
+
+
+
+\fbox{\begin{minipage}{\linewidth}
+\textbf{4. (6 Points)} Read problem 2 on pp. 267-268.
+
+\begin{enumerate}
+\item Don’t work out the problem as stated in the book, but rather, use R to select a sample of size 10 with replacement using the probabilities $\psi_i$. Show your R code.
+\item Ignoring the probabilities $\psi_i$ use R to select a sample of size 10 with replacement. Show your R code.
+\end{enumerate}
+
+\end{minipage}}
