@@ -23,11 +23,39 @@ knitr::opts_chunk$set(echo = TRUE, fig.align='center', fig.width=6, fig.asp=0.61
 This is worth 51 points, and the recorded score will be the proportion correct times 10 (rounded to the nearest half point) in order to be on a 10 point scale.
 
 \fbox{\begin{minipage}{\linewidth}
-\textbf{1. (12 Points)} A researcher developed a test designed to measure the degree of awareness of current public health events. She wants to estimate the average score that would be achieved on this test by all students in a certain high school. The administration at the school will not allow the experimenter to randomly select students from classes in session, but it will allow her to interrupt a small number of classes for the purpose of giving the test to every member of the class. Thus, the experimenter selects 25 classes at random from the 108 classes in session at a particular hour. The test is given to each member of the sampled classes, with results as shown in the table below. Estimate the mean score that would be achieved on the test by all students in the school. Also, give an approximate 95% confidence interval for the mean.
+\textbf{1. (12 Points)} A researcher developed a test designed to measure the degree of awareness of current public health events. She wants to estimate the average score that would be achieved on this test by all students in a certain high school. The administration at the school will not allow the experimenter to randomly select students from classes in session, but it will allow her to interrupt a small number of classes for the purpose of giving the test to every member of the class. Thus, the experimenter selects 25 classes at random from the 108 classes in session at a particular hour. The test is given to each member of the sampled classes, with results as shown in the table below. Estimate the mean score that would be achieved on the test by all students in the school. Also, give an approximate 95\% confidence interval for the mean.
 \end{minipage}}
 
+```{r}
+n_stu = c(31, 29, 25, 35, 15, 31, 22, 27, 25, 19, 30, 18, 21, 
+         40, 38, 28, 17, 22, 41, 32, 35, 19, 29, 18, 31)
+scores = c(1590, 1510, 1490, 1610, 800, 1720, 1310, 1427, 1290,
+           860, 1620, 710, 1140, 1980, 1990, 1420, 900, 1080, 
+           2010, 1740, 1750, 890, 1470, 910, 1740)
+```
 
+\begin{align*}
+\hat{\mu} & = \frac{\hat{\tau}}{NM}\\
+\hat{\tau} & = \frac{N}{n}\sum_{i \in S}\tau_i
+\end{align*}
 
+\[
+\hat{V}(\hat{\mu}) = \frac{1-\frac{n}{N}}{n\bar{M}^2}\frac{1}{n-1}\sum_{i \in S}M_i^2(\bar{y_i}-\hat{\mu})^2
+\]
+
+```{r}
+N = 108
+n = length(scores)
+y_bar = scores/n_stu
+M_bar = sum(n_stu)/n
+tau_hat = N/n*sum(scores)
+mu_hat = tau_hat/(N*M_bar)
+sr2 = sum(n_stu^2*(y_bar - mu_hat)^2)
+V_mu = (1-n/N)*sr2/(n*(n-1)*M_bar^2)
+MOE = 2*sqrt(V_mu)
+```
+
+The mean is `r round(mu_hat, 2)` and the 95% confidence intervals is (`r round(mu_hat-MOE, 2)`, `r round(mu_hat+MOE, 2)`).
 
 \newpage
 
@@ -49,7 +77,16 @@ The authors say “This height-and-weight survey was conducted with a stratified
 
 \end{minipage}}
 
-
+1. There are three strata in this study: schools, grades, classes.
+2. Multistage means to sample units in the order of the three strata.
+3. Three-stage cluster sample were conducted:
+  + First, randomly sample 70 schools from all 736 schools,
+  + Second, systematically sample two grades from each of the 70 sampled schools,
+  + Third, randomly sample 2 classes from the sample schools and grades.
+4. Probability sample here means some schools, grades, or classes refuse to respond, so there are issues with probability of responding, which is needed to be accounted for.
+5. Height of the respondent (student). 
+6. The population in this study is all the students in the 736 elementary schools (all New York City public schools, excluding special education schools).
+7. The proportion of primary students who were overweight ($\geq 85$th percentile BMI) is estimated to be 43.2%, and the confidence interval is (39.3%, 47.3%).
 
 \newpage
 
