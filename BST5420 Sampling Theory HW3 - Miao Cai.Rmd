@@ -107,7 +107,10 @@ The authors say “This height-and-weight survey was conducted with a stratified
 
 \end{minipage}}
 
-
+1. N/n
+2. $\frac{1}{\frac{1}{H}*\frac{n_h}{N_h}} = \frac{H*N_h}{n_h}$
+3. $\frac{1}{\frac{1}{N}} = N$
+4. $1/\Big(\frac{M_i}{\sum_{i=1}^N M_i}\Big) = \frac{\sum_{i=1}^N M_i}{M_i}$
 
 
 \newpage
@@ -124,5 +127,29 @@ The authors say “This height-and-weight survey was conducted with a stratified
 \item Don’t work out the problem as stated in the book, but rather, use R to select a sample of size 10 with replacement using the probabilities $\psi_i$. Show your R code.
 \item Ignoring the probabilities $\psi_i$ use R to select a sample of size 10 with replacement. Show your R code.
 \end{enumerate}
-
 \end{minipage}}
+
+1. 
+```{r}
+psu = 1:25
+psi = c(0.000110, 0.018556, 0.062998, 0.078216, 0.075245, 
+        0.073983, 0.076580, 0.038981, 0.040772, 0.022876, 
+        0.003721, 0.024917, 0.040654, 0.014804, 0.005577, 
+        0.070784, 0.069635, 0.034650, 0.069492, 0.036590, 
+        0.033853, 0.016959, 0.009066, 0.021795, 0.059186)
+set.seed(123)
+sample(psu, 10, TRUE, psi)
+```
+
+2. 
+
+```{r}
+set.seed(123)
+sample(psu, 10, TRUE)
+```
+
+
+
+
+
+
