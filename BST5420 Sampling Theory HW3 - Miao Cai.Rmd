@@ -108,9 +108,12 @@ The authors say “This height-and-weight survey was conducted with a stratified
 \end{minipage}}
 
 1. N/n
-2. $\frac{1}{\frac{1}{H}*\frac{n_h}{N_h}} = \frac{H*N_h}{n_h}$
+
+2. $\frac{1}{\frac{n_h}{N_h}} = \frac{N_h}{n_h}$
+
 3. $\frac{1}{\frac{1}{N}} = N$
-4. $1/\Big(\frac{M_i}{\sum_{i=1}^N M_i}\Big) = \frac{\sum_{i=1}^N M_i}{M_i}$
+
+4. $1\Bigg/\Bigg(1 - \Big(1 - \frac{M_i}{\sum_{i=1}^N M_i}\Big)^n\Bigg)$
 
 
 \newpage
