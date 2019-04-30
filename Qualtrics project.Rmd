@@ -1,0 +1,135 @@
+---
+title: "Qualtrics project"
+author: "Miao Cai"
+date: "4/29/2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+pacman::p_load(dplyr, ggplot2, scales)
+d = readr::read_csv("Qualtrics/Food Survey_April 28, 2019_17.51.csv") %>% 
+  slice(3:n()) %>% 
+  select(6, Q1:Q7) %>% 
+  slice(-5, -7) %>% 
+  filter(Q1 == "Yes")
+windowsFonts(times = windowsFont("Times New Roman"))
+pwidth = 7
+```
+
+```{r q2}
+ggplot(d, aes(x= Q2)) + 
+    geom_bar(stat="count", fill = "#4271AE", color = "#1F3552",
+             size = 0.7, width=.7) +
+    geom_text(aes( label = ..count..), stat= "count", vjust = -.5) +
+    theme_bw() + xlab("What kind of pizza crust do you prefer?") +
+    theme(text=element_text(family="times"),
+          axis.text.x = element_text(colour = "black"),
+          axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
+ggsave("Qualtrics/figs/q2.png", width = pwidth, height = pwidth*0.618, dpi = 300)
+```
+
+```{r}
+ggplot(d, aes(x= Q3)) + 
+    geom_bar(stat="count", fill = "#4271AE", color = "#1F3552",
+             size = 0.7, width=.7) +
+    geom_text(aes( label = ..count..), stat= "count", vjust = -.5) +
+    theme_bw() + xlab("What kind of pizza sauce do you prefer?")+
+    theme(text=element_text(family="times"),
+          axis.text.x = element_text(colour = "black"),
+          axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
+ggsave("Qualtrics/figs/q3.png", width = pwidth, height = pwidth*0.618, dpi = 300)
+```
+
+
+
+
+```{r}
+ggplot(d, aes(x= Q12)) + 
+    geom_bar(stat="count", fill = "#4271AE", color = "#1F3552",
+             size = 0.7, width=.7) +
+    geom_text(aes( label = ..count..), stat= "count", vjust = -.5) +
+    theme_bw() + xlab("Do you want cheese on your pizza?")+
+    theme(text=element_text(family="times"),
+          axis.text.x = element_text(colour = "black"),
+          axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
+ggsave("Qualtrics/figs/q12.png", width = pwidth, height = pwidth*0.618, dpi = 300)
+```
+
+
+```{r}
+d %>% 
+  filter(!is.na(Q4)) %>% 
+  ggplot(aes(x= Q4)) + 
+    geom_bar(stat="count", fill = "#4271AE", color = "#1F3552",
+             size = 0.7, width=.7) +
+    geom_text(aes( label = ..count..), stat= "count", vjust = -.5) +
+    theme_bw() + xlab("What kind of cheese do you want on the pizza?")+
+    theme(text=element_text(family="times"),
+          axis.text.x = element_text(colour = "black"),
+          axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
+ggsave("Qualtrics/figs/q4.png", width = pwidth, height = pwidth*0.618, dpi = 300)
+```
+
+
+
+
+
+```{r}
+ggplot(d, aes(x= Q11)) + 
+    geom_bar(stat="count", fill = "#4271AE", color = "#1F3552",
+             size = 0.7, width=.7) +
+    geom_text(aes( label = ..count..), stat= "count", vjust = -.5) +
+    theme_bw() + xlab("Do you want meat on your pizza?")+
+    theme(text=element_text(family="times"),
+          axis.text.x = element_text(colour = "black"),
+          axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
+ggsave("Qualtrics/figs/q11.png", width = pwidth, height = pwidth*0.618, dpi = 300)
+```
+
+
+```{r}
+d %>% 
+  filter(!is.na(Q5)) %>% 
+  ggplot(aes(x= Q5)) + 
+    geom_bar(stat="count", fill = "#4271AE", color = "#1F3552",
+             size = 0.7, width=.7) +
+    geom_text(aes( label = ..count..), stat= "count", vjust = -.5) +
+    theme_bw() + xlab("What kind of meat do you want on the pizza?")+
+    theme(text=element_text(family="times"),
+          axis.text.x = element_text(colour = "black"),
+          axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
+ggsave("Qualtrics/figs/q5.png", width = pwidth, height = pwidth*0.618, dpi = 300)
+```
+
+
+
+```{r}
+ggplot(d, aes(x= Q6)) + 
+    geom_bar(stat="count", fill = "#4271AE", color = "#1F3552",
+             size = 0.7, width=.7) +
+    geom_text(aes( label = ..count..), stat= "count", vjust = -.5) +
+    theme_bw() + xlab("What kind of vegetables do you want on the pizza?")+
+    theme(text=element_text(family="times"),
+          axis.text.x = element_text(colour = "black"),
+          axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
+ggsave("Qualtrics/figs/q6.png", width = pwidth, height = pwidth*0.618, dpi = 300)
+```
+
+```{r}
+ggplot(d, aes(x= Q7)) + 
+    geom_bar(stat="count", fill = "#4271AE", color = "#1F3552",
+             size = 0.7, width=.7) +
+    geom_text(aes( label = ..count..), stat= "count", vjust = -.5) +
+    theme_bw() + xlab("What seasoning do you want on the finished pizza?")+
+    theme(text=element_text(family="times"),
+          axis.text.x = element_text(colour = "black"),
+          axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))
+ggsave("Qualtrics/figs/q7.png", width = pwidth, height = pwidth*0.618, dpi = 300)
+```
+
+
+
