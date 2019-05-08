@@ -325,6 +325,7 @@ tab1_2 = svymean(~race + gender + age + marital + education + income + bmi +
   tibble::rownames_to_column(var="var_name")
 
 
+
 tab1_1
 tab1_2
 readr::write_csv(tab1_1, "data/tab1_1.csv")
